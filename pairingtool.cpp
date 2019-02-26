@@ -6,6 +6,7 @@ PairingTool::PairingTool(QWidget *parent) :
     ui(new Ui::PairingTool)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Pairing Tool");
     m_bDongleOpen = false;
     m_bMouseOpen = false;
     m_nReadBuffSize = 64;
@@ -515,7 +516,7 @@ void PairingTool::on_OnOffBtn_Dongle_clicked()
 
         if(!m_DongleSerial->open(QIODevice::ReadWrite))
         {
-            QMessageBox::critical(this, tr("Error"), tr("串口不存在或者被其它程序占用"),QMessageBox::Ok);
+            QMessageBox::critical(this, tr("Error"), tr("Dongle 串口不存在或者被其它程序占用"),QMessageBox::Ok);
             return;
         }
 
