@@ -1,16 +1,25 @@
 #include "pairingtool.h"
 #include "ui_pairingtool.h"
 #include <QDebug>
+
 PairingTool::PairingTool(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::PairingTool)
 {
     ui->setupUi(this);
     this->setWindowTitle("Pairing Tool");
+    this->setFixedSize(734,572);
     m_bDongleOpen = false;
     m_bMouseOpen = false;
     m_nReadBuffSize = 64;
     rfSerialPortTmr = new QTimer; // 刷新串口定时器
+    mysql->createConnection();
+//    mysql->deleteSql("dongle","macAddress","123");
+//    mysql->writeSql("dongle","macAddress","333");
+//    mysql->updateSql("dongle","macAddress","123","222");
+//    QString data;
+//    qDebug()<<mysql->checkSql("dongle","macAddress","222",data);
+//    qDebug()<<data;
     InitStatusBar();
     InitCommCmb();
     connect(rfSerialPortTmr,SIGNAL(timeout()),this,SLOT(rfSerialPort()));
@@ -18,11 +27,91 @@ PairingTool::PairingTool(QWidget *parent) :
     // 捕捉接收信号定时器
     connect(m_DongleSerial, SIGNAL(readyRead()), this, SLOT(slot_RecvDonglePortData()));
     connect(m_MouseSerial, SIGNAL(readyRead()), this, SLOT(slot_RecvMousePortData()));
+    SetDongleModel();
+    SetMouseModel();
+    SetPairingInfoModel();
 }
 
 PairingTool::~PairingTool()
 {
     delete ui;
+}
+
+void PairingTool::SetPairingInfoModel()
+{
+    pairingInfoModel = new QSqlTableModel(this);
+    pairingInfoModel->setTable("pairingInfo");
+    pairingInfoModel->select();
+    pairingInfoModel->removeColumn(0);// 去除 Id
+    // 设置编辑策略
+    dongleModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    ui->tbv_ParingInfo->setModel(pairingInfoModel);
+    // 固定列宽
+    ui->tbv_ParingInfo->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Fixed);
+    ui->tbv_ParingInfo->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Fixed);
+    ui->tbv_ParingInfo->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Fixed);
+    // 设置表头高度
+    ui->tbv_ParingInfo->horizontalHeader()->setMinimumHeight(30);
+    // 设置列宽
+    ui->tbv_ParingInfo->setColumnWidth(0,166);
+    ui->tbv_ParingInfo->setColumnWidth(1,166);
+    ui->tbv_ParingInfo->setColumnWidth(2,166);
+    // 设置表格的单元为只读属性，不能编辑
+    ui->tbv_ParingInfo->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    // 不显示行头
+    ui->tbv_ParingInfo->verticalHeader()->hide();
+}
+
+void PairingTool::SetDongleModel()
+{
+    dongleModel = new QSqlTableModel(this);
+    dongleModel->setTable("dongle");
+    dongleModel->select();
+    dongleModel->removeColumn(0);// 去除 Id
+    dongleModel->removeColumn(0);// 去除 msgId
+    // 设置编辑策略
+    dongleModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    ui->tbv_Dongle->setModel(dongleModel);
+    // 固定列宽
+    ui->tbv_Dongle->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Fixed);
+    ui->tbv_Dongle->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Fixed);
+    ui->tbv_Dongle->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Fixed);
+    // 设置表头高度
+    ui->tbv_Dongle->horizontalHeader()->setMinimumHeight(30);
+    // 设置列宽
+    ui->tbv_Dongle->setColumnWidth(0,166);
+    ui->tbv_Dongle->setColumnWidth(1,166);
+    ui->tbv_Dongle->setColumnWidth(2,166);
+    // 设置表格的单元为只读属性，不能编辑
+    ui->tbv_Dongle->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    // 不显示行头
+    ui->tbv_Dongle->verticalHeader()->hide();
+}
+
+void PairingTool::SetMouseModel()
+{
+    mouseModel = new QSqlTableModel(this);
+    mouseModel->setTable("mouse");
+    mouseModel->select();
+    mouseModel->removeColumn(0);// 去除 Id
+    mouseModel->removeColumn(0);// 去除 msgId
+    // 设置编辑策略
+    mouseModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    ui->tbv_Mouse->setModel(mouseModel);
+    // 固定列宽
+    ui->tbv_Mouse->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Fixed);
+    ui->tbv_Mouse->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Fixed);
+    ui->tbv_Mouse->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Fixed);
+    // 设置表头高度
+    ui->tbv_Mouse->horizontalHeader()->setMinimumHeight(30);
+    // 设置列宽
+    ui->tbv_Mouse->setColumnWidth(0,166);
+    ui->tbv_Mouse->setColumnWidth(1,166);
+    ui->tbv_Mouse->setColumnWidth(2,166);
+    // 设置表格的单元为只读属性，不能编辑
+    ui->tbv_Mouse->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    // 不显示行头
+    ui->tbv_Mouse->verticalHeader()->hide();
 }
 
 // 检测到 USB 设备被溢出，关闭串口，并弹出提示
@@ -609,4 +698,19 @@ void PairingTool::closeEvent(QCloseEvent *event)
         m_MouseSerial->close();
     }
     event->accept();
+}
+
+void PairingTool::on_btn_registerDevice_clicked()
+{
+
+}
+
+void PairingTool::on_btn_checkVersionId_clicked()
+{
+
+}
+
+void PairingTool::on_btn_paringCode_clicked()
+{
+    notifypairinginfo->show();
 }

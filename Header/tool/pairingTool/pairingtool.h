@@ -9,6 +9,9 @@
 #include <QTimer>
 #include <QCloseEvent>
 #include <QMessageBox>
+#include <QSqlTableModel>
+#include "mysql.h"
+#include "notifypairinginfo.h"
 
 namespace Ui {
 class PairingTool;
@@ -47,6 +50,9 @@ public:
     bool SetMouseSerialPortParam(QSerialPort *serial); // 设置串口参数，失败返回 false，成功返回 true
     //    父类重写
     void closeEvent(QCloseEvent *event);
+    void SetDongleModel(); // 设置 Dongle 数据库模型
+    void SetMouseModel(); // 设置 Mouse 数据库模型
+    void SetPairingInfoModel(); // 设置 PairingInfo 数据库模型
 
 private slots:
     void on_OnOffBtn_Dongle_clicked(); // Dongle 打开串口按钮
@@ -59,9 +65,15 @@ private slots:
 
     void rfSerialPort(); // 定时串口刷新
 
-    void on_baudRCmb_Dongle_currentIndexChanged(int index);
+    void on_baudRCmb_Dongle_currentIndexChanged(int index);// Dongle 自定义波特率
 
-    void on_baudRCmb_Mouse_currentIndexChanged(int index);
+    void on_baudRCmb_Mouse_currentIndexChanged(int index);// Mouse 自定义波特率
+
+    void on_btn_registerDevice_clicked();
+
+    void on_btn_checkVersionId_clicked();
+
+    void on_btn_paringCode_clicked();
 
 private:
     Ui::PairingTool *ui;
@@ -71,6 +83,11 @@ private:
     bool m_bMouseOpen; // 标识 Mouse 串口状态
     QTimer *rfSerialPortTmr;// 刷新串口计时器
     qint64 m_nReadBuffSize; // 串口缓冲区大小
+    MySql *mysql = new MySql; // 实例化 MySql 对象
+    NotifyPairingInfo *notifypairinginfo = new NotifyPairingInfo; // 实例化分配配对码对象
+    QSqlTableModel *dongleModel;
+    QSqlTableModel *mouseModel;
+    QSqlTableModel *pairingInfoModel;
 };
 
 #endif // PAIRINGTOOL_H

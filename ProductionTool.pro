@@ -6,6 +6,7 @@
 
 QT       += core gui
 QT       += serialport
+QT       += sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,38 +27,47 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        main.cpp \
-        mainwindow.cpp \
-    setting.cpp \
-    setting_outputpower.cpp \
-    setting_carrieroffsetanddrift.cpp \
-    setting_modulationcharacteristic.cpp \
-    setting_sensitivity.cpp \
-    setting_maximuminputpower.cpp \
-    setting_perintegrity.cpp \
-    pairingtool.cpp
+    Source/main.cpp \
+    Source/mainwindow.cpp \
+    Source/setting/setting.cpp \
+    Source/setting/setting_carrieroffsetanddrift.cpp \
+    Source/setting/setting_maximuminputpower.cpp \
+    Source/setting/setting_modulationcharacteristic.cpp \
+    Source/setting/setting_outputpower.cpp \
+    Source/setting/setting_perintegrity.cpp \
+    Source/setting/setting_sensitivity.cpp \
+    Source/tool/pairingTool/mysql.cpp \
+    Source/tool/pairingTool/pairingtool.cpp \
+    Source/tool/pairingTool/notifypairinginfo.cpp
 
 HEADERS += \
-        mainwindow.h \
-    setting.h \
-    setting_outputpower.h \
-    setting_carrieroffsetanddrift.h \
-    setting_modulationcharacteristic.h \
-    setting_sensitivity.h \
-    setting_maximuminputpower.h \
-    setting_perintegrity.h \
-    pairingtool.h
+    Header/setting/setting.h \
+    Header/setting/setting_carrieroffsetanddrift.h \
+    Header/setting/setting_maximuminputpower.h \
+    Header/setting/setting_modulationcharacteristic.h \
+    Header/setting/setting_outputpower.h \
+    Header/setting/setting_perintegrity.h \
+    Header/setting/setting_sensitivity.h \
+    Header/mainwindow.h \
+    Header/tool/pairingTool/mysql.h \
+    Header/tool/pairingTool/pairingtool.h \
+    Header/tool/pairingTool/notifypairinginfo.h
 
 FORMS += \
-        mainwindow.ui \
-    setting.ui \
-    setting_outputpower.ui \
-    setting_carrieroffsetanddrift.ui \
-    setting_modulationcharacteristic.ui \
-    setting_sensitivity.ui \
-    setting_maximuminputpower.ui \
-    setting_perintegrity.ui \
-    pairingtool.ui
+    UI/setting/setting.ui \
+    UI/setting/setting_carrieroffsetanddrift.ui \
+    UI/setting/setting_maximuminputpower.ui \
+    UI/setting/setting_modulationcharacteristic.ui \
+    UI/setting/setting_outputpower.ui \
+    UI/setting/setting_perintegrity.ui \
+    UI/setting/setting_sensitivity.ui \
+    UI/mainwindow.ui \
+    UI/tool/pairingTool/pairingtool.ui \
+    UI/tool/pairingTool/notifypairinginfo.ui
+
+INCLUDEPATH += ./HEADER/
+INCLUDEPATH += ./HEADER/setting
+INCLUDEPATH += ./HEADER/tool/pairingTool
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
