@@ -2,6 +2,7 @@
 #include "ui_pairingtool.h"
 #include <QDebug>
 #include <QSqlRecord>
+
 PairingTool::PairingTool(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::PairingTool)
@@ -38,6 +39,7 @@ PairingTool::~PairingTool()
 
 void PairingTool::SetPairingInfoModel()
 {
+    QByteArray pairingIntCode;
     pairingInfoModel = new QSqlTableModel(this);
     pairingInfoModel->setTable("pairingInfo");
     pairingInfoModel->select();
@@ -45,7 +47,9 @@ void PairingTool::SetPairingInfoModel()
     int rowCount = pairingInfoModel->rowCount()-1;
     // 数据库中最后一行的 id + 1 作为配对码
     int pairingCode = pairingInfoModel->record(rowCount).value(0).toInt() + 1;
-    ui->le_pairingCode->setText(QString::number(pairingCode));
+    // 通过十进制转 6 个字节的十进制字符串作为配对码
+    toolsfuc->IntToBytesIntStr(pairingCode,6,pairingIntCode);
+    ui->le_pairingCode->setText(pairingIntCode);
     pairingInfoModel->removeColumn(0);// 去除 Id
 //    // 分配新的配对码到配对码窗口
 //    ui->le_pairingCode->setText(QString::number(pairingInfoModel->rowCount()+1));
@@ -734,6 +738,7 @@ void PairingTool::on_btn_checkVersionId_clicked()
 
 void PairingTool::on_btn_paringCode_clicked()
 {
+   QByteArray pairingIntCode;
    QSqlRecord newPairingRecord;
    QSqlTableModel *newPairingModel = new QSqlTableModel;
    newPairingModel->setTable("pairingInfo");
@@ -769,7 +774,8 @@ void PairingTool::on_btn_paringCode_clicked()
        int newRowCount = newPairingModel->rowCount()-1;
        // 数据库中最后一行的 id + 1 作为新的配对码，更新进配对码 Text 中
        int pairingCode = newPairingModel->record(newRowCount).value(0).toInt() + 1;
-       ui->le_pairingCode->setText(QString::number(pairingCode));
+       // 通过十进制转 6 个字节的十进制字符串作为配对码
+       toolsfuc->IntToBytesIntStr(pairingCode,6,pairingIntCode);
+       ui->le_pairingCode->setText(pairingIntCode);
    }
-
 }

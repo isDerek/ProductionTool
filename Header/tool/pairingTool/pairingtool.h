@@ -11,7 +11,7 @@
 #include <QMessageBox>
 #include <QSqlTableModel>
 #include "mysql.h"
-
+#include "toolsfuc.h"
 namespace Ui {
 class PairingTool;
 }
@@ -83,6 +83,7 @@ private:
     QTimer *rfSerialPortTmr;// 刷新串口计时器
     qint64 m_nReadBuffSize; // 串口缓冲区大小
     MySql *mysql = new MySql; // 实例化 MySql 对象
+    ToolsFuc *toolsfuc = new ToolsFuc; // 实例化工具类对象
     QSqlTableModel *dongleModel; // 声明 Dongle 模型独享
     QSqlTableModel *mouseModel; // 声明鼠标模型对象
     QSqlTableModel *pairingInfoModel; // 声明分配码信息模型对象
