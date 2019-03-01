@@ -11,7 +11,6 @@
 #include <QMessageBox>
 #include <QSqlTableModel>
 #include "mysql.h"
-#include "notifypairinginfo.h"
 
 namespace Ui {
 class PairingTool;
@@ -69,11 +68,11 @@ private slots:
 
     void on_baudRCmb_Mouse_currentIndexChanged(int index);// Mouse 自定义波特率
 
-    void on_btn_registerDevice_clicked();
+    void on_btn_registerDevice_clicked(); // 设备注册按钮
 
-    void on_btn_checkVersionId_clicked();
+    void on_btn_checkVersionId_clicked(); // 查看版本按钮
 
-    void on_btn_paringCode_clicked();
+    void on_btn_paringCode_clicked(); // 分配配对码按钮
 
 private:
     Ui::PairingTool *ui;
@@ -84,10 +83,11 @@ private:
     QTimer *rfSerialPortTmr;// 刷新串口计时器
     qint64 m_nReadBuffSize; // 串口缓冲区大小
     MySql *mysql = new MySql; // 实例化 MySql 对象
-    NotifyPairingInfo *notifypairinginfo = new NotifyPairingInfo; // 实例化分配配对码对象
-    QSqlTableModel *dongleModel;
-    QSqlTableModel *mouseModel;
-    QSqlTableModel *pairingInfoModel;
+    QSqlTableModel *dongleModel; // 声明 Dongle 模型独享
+    QSqlTableModel *mouseModel; // 声明鼠标模型对象
+    QSqlTableModel *pairingInfoModel; // 声明分配码信息模型对象
+    QByteArray DongleMACAddress; // Dongle MAC 地址
+    QByteArray MouseMACAddress; // Mouse MAC 地址
 };
 
 #endif // PAIRINGTOOL_H

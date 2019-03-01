@@ -33,6 +33,7 @@ private:
     Ui::MainWindow *ui;
     Setting *setting = new Setting;
     PairingTool *pairingtool = new PairingTool;
+
 };
 
 #endif // MAINWINDOW_H

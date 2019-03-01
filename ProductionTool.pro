@@ -37,8 +37,7 @@ SOURCES += \
     Source/setting/setting_perintegrity.cpp \
     Source/setting/setting_sensitivity.cpp \
     Source/tool/pairingTool/mysql.cpp \
-    Source/tool/pairingTool/pairingtool.cpp \
-    Source/tool/pairingTool/notifypairinginfo.cpp
+    Source/tool/pairingTool/pairingtool.cpp
 
 HEADERS += \
     Header/setting/setting.h \
@@ -50,8 +49,7 @@ HEADERS += \
     Header/setting/setting_sensitivity.h \
     Header/mainwindow.h \
     Header/tool/pairingTool/mysql.h \
-    Header/tool/pairingTool/pairingtool.h \
-    Header/tool/pairingTool/notifypairinginfo.h
+    Header/tool/pairingTool/pairingtool.h
 
 FORMS += \
     UI/setting/setting.ui \
@@ -62,8 +60,7 @@ FORMS += \
     UI/setting/setting_perintegrity.ui \
     UI/setting/setting_sensitivity.ui \
     UI/mainwindow.ui \
-    UI/tool/pairingTool/pairingtool.ui \
-    UI/tool/pairingTool/notifypairinginfo.ui
+    UI/tool/pairingTool/pairingtool.ui
 
 INCLUDEPATH += ./HEADER/
 INCLUDEPATH += ./HEADER/setting

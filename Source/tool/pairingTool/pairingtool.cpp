@@ -1,7 +1,7 @@
 #include "pairingtool.h"
 #include "ui_pairingtool.h"
 #include <QDebug>
-
+#include <QSqlRecord>
 PairingTool::PairingTool(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::PairingTool)
@@ -14,12 +14,6 @@ PairingTool::PairingTool(QWidget *parent) :
     m_nReadBuffSize = 64;
     rfSerialPortTmr = new QTimer; // 刷新串口定时器
     mysql->createConnection();
-//    mysql->deleteSql("dongle","macAddress","123");
-//    mysql->writeSql("dongle","macAddress","333");
-//    mysql->updateSql("dongle","macAddress","123","222");
-//    QString data;
-//    qDebug()<<mysql->checkSql("dongle","macAddress","222",data);
-//    qDebug()<<data;
     InitStatusBar();
     InitCommCmb();
     connect(rfSerialPortTmr,SIGNAL(timeout()),this,SLOT(rfSerialPort()));
@@ -27,9 +21,14 @@ PairingTool::PairingTool(QWidget *parent) :
     // 捕捉接收信号定时器
     connect(m_DongleSerial, SIGNAL(readyRead()), this, SLOT(slot_RecvDonglePortData()));
     connect(m_MouseSerial, SIGNAL(readyRead()), this, SLOT(slot_RecvMousePortData()));
-    SetDongleModel();
-    SetMouseModel();
-    SetPairingInfoModel();
+    SetDongleModel(); // 设置 Dongle 数据库模型进表格
+    SetMouseModel(); // 设置 Mouse 数据库模型进表格
+    SetPairingInfoModel(); // 设置 配对码数据库模型进表格
+//    ui->le_mouseMAC->setEnabled(false);
+//    ui->le_dongleMAC->setEnabled(false);
+    ui->le_pairingCode->setEnabled(false);
+    ui->te_mouseRevData->setReadOnly(true);
+    ui->te_dongleRevData->setReadOnly(true);
 }
 
 PairingTool::~PairingTool()
@@ -42,7 +41,14 @@ void PairingTool::SetPairingInfoModel()
     pairingInfoModel = new QSqlTableModel(this);
     pairingInfoModel->setTable("pairingInfo");
     pairingInfoModel->select();
+    // 数据库从第 0 行算起
+    int rowCount = pairingInfoModel->rowCount()-1;
+    // 数据库中最后一行的 id + 1 作为配对码
+    int pairingCode = pairingInfoModel->record(rowCount).value(0).toInt() + 1;
+    ui->le_pairingCode->setText(QString::number(pairingCode));
     pairingInfoModel->removeColumn(0);// 去除 Id
+//    // 分配新的配对码到配对码窗口
+//    ui->le_pairingCode->setText(QString::number(pairingInfoModel->rowCount()+1));
     // 设置编辑策略
     dongleModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
     ui->tbv_ParingInfo->setModel(pairingInfoModel);
@@ -678,12 +684,28 @@ void PairingTool::on_baudRCmb_Mouse_currentIndexChanged(int index)
 
 void PairingTool::slot_RecvDonglePortData()
 {
-
+    QByteArray bytes;
+    bytes = bytes.append(m_DongleSerial->readAll());
+    qDebug() << bytes;
+    if(!bytes.isEmpty())
+    {
+        QString strRecv = QString::fromLocal8Bit(bytes);
+        ui->te_dongleRevData->insertPlainText(strRecv);
+        ui->te_dongleRevData->moveCursor(QTextCursor::End);//保证 Text 数据不会自动换行
+    }
 }
 
 void PairingTool::slot_RecvMousePortData()
 {
-
+    QByteArray bytes;
+    bytes = bytes.append(m_MouseSerial->readAll());
+    qDebug() << bytes;
+    if(!bytes.isEmpty())
+    {
+        QString strRecv = QString::fromLocal8Bit(bytes);
+        ui->te_mouseRevData->insertPlainText(strRecv);
+        ui->te_mouseRevData->moveCursor(QTextCursor::End);//保证 Text 数据不会自动换行
+    }
 }
 
 // 串口关闭事件，如果窗口关闭前串口未关闭，则关闭串口
@@ -712,5 +734,42 @@ void PairingTool::on_btn_checkVersionId_clicked()
 
 void PairingTool::on_btn_paringCode_clicked()
 {
-    notifypairinginfo->show();
+   QSqlRecord newPairingRecord;
+   QSqlTableModel *newPairingModel = new QSqlTableModel;
+   newPairingModel->setTable("pairingInfo");
+   newPairingRecord = newPairingModel->record();
+   QString dongleMAC = ui->le_dongleMAC->text();
+   QString mouseMAC = ui->le_mouseMAC->text();
+   if(dongleMAC == "" || mouseMAC == "")
+   {
+       return;
+   }
+   // 字符串查询是一定要加上单引号！！！
+   newPairingModel->setFilter(QString("dongleMac = '%1' or mouseMac = '%2'").arg(dongleMAC).arg(mouseMAC));
+   if(newPairingModel->select())
+   {
+       // 从配对码数据库移除当前存在的 Dongle MAC 和 Mouse MAC 的配对记录
+       int rowCount = newPairingModel->rowCount();
+       for(int i = 0; i<rowCount ; i++)
+       {
+           newPairingModel->removeRow(i);
+       }
+       newPairingModel->submitAll();
+       // 重新为当前的 Dongle MAC 和 Mouse MAC 分配新的配对码
+       newPairingModel->select();
+       int rowNum = newPairingModel->rowCount();
+       newPairingRecord.setValue("dongleMac",dongleMAC);
+       newPairingRecord.setValue("mouseMac",mouseMAC);
+       newPairingRecord.setValue("pairingCode",ui->le_pairingCode->text());
+       newPairingModel->insertRecord(rowNum,newPairingRecord);
+       newPairingModel->setRecord(rowNum,newPairingRecord);
+       newPairingModel->submitAll();
+       // 将数据库的数据查询出来，再从模型中取出最后一行
+       newPairingModel->select();
+       int newRowCount = newPairingModel->rowCount()-1;
+       // 数据库中最后一行的 id + 1 作为新的配对码，更新进配对码 Text 中
+       int pairingCode = newPairingModel->record(newRowCount).value(0).toInt() + 1;
+       ui->le_pairingCode->setText(QString::number(pairingCode));
+   }
+
 }
