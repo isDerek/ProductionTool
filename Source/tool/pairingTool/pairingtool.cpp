@@ -41,7 +41,7 @@ void PairingTool::SetPairingInfoModel()
 {
     QByteArray pairingIntCode;
     pairingInfoModel = new QSqlTableModel(this);
-    pairingInfoModel->setTable("pairingInfo");
+    pairingInfoModel->setTable("pairinginfo");
     pairingInfoModel->select();
     // 数据库从第 0 行算起
     int rowCount = pairingInfoModel->rowCount()-1;
@@ -51,8 +51,6 @@ void PairingTool::SetPairingInfoModel()
     toolsfuc->IntToBytesIntStr(pairingCode,6,pairingIntCode);
     ui->le_pairingCode->setText(pairingIntCode);
     pairingInfoModel->removeColumn(0);// 去除 Id
-//    // 分配新的配对码到配对码窗口
-//    ui->le_pairingCode->setText(QString::number(pairingInfoModel->rowCount()+1));
     // 设置编辑策略
     dongleModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
     ui->tbv_ParingInfo->setModel(pairingInfoModel);
@@ -741,7 +739,7 @@ void PairingTool::on_btn_paringCode_clicked()
    QByteArray pairingIntCode;
    QSqlRecord newPairingRecord;
    QSqlTableModel *newPairingModel = new QSqlTableModel;
-   newPairingModel->setTable("pairingInfo");
+   newPairingModel->setTable("pairinginfo");
    newPairingRecord = newPairingModel->record();
    QString dongleMAC = ui->le_dongleMAC->text();
    QString mouseMAC = ui->le_mouseMAC->text();
