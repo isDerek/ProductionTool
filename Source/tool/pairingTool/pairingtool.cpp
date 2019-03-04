@@ -2,6 +2,7 @@
 #include "ui_pairingtool.h"
 #include <QDebug>
 #include <QSqlRecord>
+#include <QSqlError>
 
 PairingTool::PairingTool(QWidget *parent) :
     QMainWindow(parent),
@@ -40,7 +41,7 @@ PairingTool::~PairingTool()
 void PairingTool::SetPairingInfoModel()
 {
     QByteArray pairingIntCode;
-    pairingInfoModel = new QSqlTableModel(this);
+    pairingInfoModel = new QSqlTableModel;
     pairingInfoModel->setTable("pairinginfo");
     pairingInfoModel->select();
     // 数据库从第 0 行算起
@@ -767,13 +768,24 @@ void PairingTool::on_btn_paringCode_clicked()
        newPairingModel->insertRecord(rowNum,newPairingRecord);
        newPairingModel->setRecord(rowNum,newPairingRecord);
        newPairingModel->submitAll();
-       // 将数据库的数据查询出来，再从模型中取出最后一行
-       newPairingModel->select();
-       int newRowCount = newPairingModel->rowCount()-1;
-       // 数据库中最后一行的 id + 1 作为新的配对码，更新进配对码 Text 中
-       int pairingCode = newPairingModel->record(newRowCount).value(0).toInt() + 1;
-       // 通过十进制转 6 个字节的十进制字符串作为配对码
-       toolsfuc->IntToBytesIntStr(pairingCode,6,pairingIntCode);
-       ui->le_pairingCode->setText(pairingIntCode);
    }
+   // 更新配对码到 Mouse 数据表中
+   mysql->updateSql("mouse","pairingCode","macAddress",ui->le_pairingCode->text(),ui->le_mouseMAC->text());
+   // 更新配对码到 Dongle 数据表中
+   mysql->updateSql("dongle","pairingCode","macAddress",ui->le_pairingCode->text(),ui->le_dongleMAC->text());
+   // 将处理过数据库模型 Mouse / Dongle / PairingInfo 重新查询，显示到界面上
+   pairingInfoModel->select();
+   mouseModel->select();
+   dongleModel->select();
+   ui->tbv_ParingInfo->setModel(pairingInfoModel);
+   ui->tbv_Mouse->setModel(mouseModel);
+   ui->tbv_Dongle->setModel(dongleModel);
+   // 查询 PairingInfo 表最新的信息
+   newPairingModel->select();
+   int newRowCount = newPairingModel->rowCount()-1;
+   // 数据库中最后一行的 id + 1 作为新的配对码，更新进配对码 Text 中
+   int pairingCode = newPairingModel->record(newRowCount).value(0).toInt()+1;
+   // 通过十进制转 6 个字节的十进制字符串作为配对码
+   toolsfuc->IntToBytesIntStr(pairingCode,6,pairingIntCode);
+   ui->le_pairingCode->setText(pairingIntCode);
 }

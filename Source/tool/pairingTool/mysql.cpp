@@ -43,19 +43,17 @@ void MySql::deleteSql(QString table, QString field, QString value)
     qDebug()<<"删除成功";
 }
 
-void MySql::updateSql(QString table, QString field, QString oldValue, QString newValue)
+void MySql::updateSql(QString table, QString updatefield,  QString checkfield, QString updateValue, QString checkValue)
 {
     QString checkData;
-    QString str = QString("update %1 set %2 = '%4' where %2 = '%3'").arg(table).arg(field).arg(oldValue).arg(newValue);
+    QString str = QString("update %1 set %2 = '%3' where %4 = '%5'").arg(table).arg(updatefield).arg(updateValue).arg(checkfield).arg(checkValue);
     QSqlQuery query;
     query.exec(str);
-    QString str1 = QString("select *from %1 where %2 = '%3'").arg(table).arg(field).arg(newValue);
-    query.exec(str1);
     while (query.next())
     {
         checkData = query.value(3).toString();
     }
-    qDebug()<<"更新成功";
+//    qDebug()<<"更新成功";
 }
 
 bool MySql::checkSql(QString table, QString field, QString value, QString &pairingCode)
