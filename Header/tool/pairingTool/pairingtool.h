@@ -12,6 +12,8 @@
 #include <QSqlTableModel>
 #include "mysql.h"
 #include "toolsfuc.h"
+#include "factorypro.h"
+
 namespace Ui {
 class PairingTool;
 }
@@ -52,7 +54,9 @@ public:
     void SetDongleModel(); // 设置 Dongle 数据库模型
     void SetMouseModel(); // 设置 Mouse 数据库模型
     void SetPairingInfoModel(); // 设置 PairingInfo 数据库模型
-
+    void checkCMDID(char CMDID,char DeviceID, QByteArray payload); // 查看 CMDID，并执行对应的执行函数
+    void deviceMACInfoHandler(char deviceID ,QByteArray payload); // 设备 MAC 信息处理函数
+    void deviceVersionInfoHandler(char deviceID, QByteArray payload); // 设备版本信息处理函数
 private slots:
     void on_OnOffBtn_Dongle_clicked(); // Dongle 打开串口按钮
 
@@ -74,6 +78,7 @@ private slots:
 
     void on_btn_paringCode_clicked(); // 分配配对码按钮
 
+
 private:
     Ui::PairingTool *ui;
     QLabel *m_DongleSerStateLbl; // Dongle 串口状态
@@ -84,6 +89,7 @@ private:
     qint64 m_nReadBuffSize; // 串口缓冲区大小
     MySql *mysql = new MySql; // 实例化 MySql 对象
     ToolsFuc *toolsfuc = new ToolsFuc; // 实例化工具类对象
+    FactoryPro *factorypro = new FactoryPro; // 实例化工厂协议类对象
     QSqlTableModel *dongleModel; // 声明 Dongle 模型独享
     QSqlTableModel *mouseModel; // 声明鼠标模型对象
     QSqlTableModel *pairingInfoModel; // 声明分配码信息模型对象

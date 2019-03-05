@@ -38,7 +38,8 @@ SOURCES += \
     Source/setting/setting_sensitivity.cpp \
     Source/tool/pairingTool/mysql.cpp \
     Source/tool/pairingTool/pairingtool.cpp \
-    toolsfuc.cpp
+    toolsfuc.cpp \
+    factorypro.cpp
 
 HEADERS += \
     Header/setting/setting.h \
@@ -51,7 +52,8 @@ HEADERS += \
     Header/mainwindow.h \
     Header/tool/pairingTool/mysql.h \
     Header/tool/pairingTool/pairingtool.h \
-    toolsfuc.h
+    toolsfuc.h \
+    factorypro.h
 
 FORMS += \
     UI/setting/setting.ui \

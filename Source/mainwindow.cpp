@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle("Production Tool");
     TableViewInit();
-
 }
 
 MainWindow::~MainWindow()

@@ -21,7 +21,7 @@ bool MySql::createConnection()
     db.setPassword("88888888");   //这里输入你的密码
     if (!db.open()) {
         QMessageBox::critical(nullptr, QObject::tr("无法打开数据库"),
-        "无法创建数据库连接！ ", QMessageBox::Cancel);
+        db.lastError().text(), QMessageBox::Cancel);
         return false;
     }
     return true;

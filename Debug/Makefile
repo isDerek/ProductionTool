@@ -247,6 +247,7 @@ Makefile: ../ProductionTool.pro E:/QT5/5.12.0/mingw73_64/mkspecs/win32-g++/qmake
 		E:/QT5/5.12.0/mingw73_64/lib/Qt5Widgets.prl \
 		E:/QT5/5.12.0/mingw73_64/lib/Qt5Gui.prl \
 		E:/QT5/5.12.0/mingw73_64/lib/Qt5SerialPort.prl \
+		E:/QT5/5.12.0/mingw73_64/lib/Qt5Sql.prl \
 		E:/QT5/5.12.0/mingw73_64/lib/Qt5Core.prl \
 		E:/QT5/5.12.0/mingw73_64/lib/qtmaind.prl
 	$(QMAKE) -o Makefile ..\ProductionTool.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug"
@@ -436,6 +437,7 @@ E:/QT5/5.12.0/mingw73_64/mkspecs/features/lex.prf:
 E:/QT5/5.12.0/mingw73_64/lib/Qt5Widgets.prl:
 E:/QT5/5.12.0/mingw73_64/lib/Qt5Gui.prl:
 E:/QT5/5.12.0/mingw73_64/lib/Qt5SerialPort.prl:
+E:/QT5/5.12.0/mingw73_64/lib/Qt5Sql.prl:
 E:/QT5/5.12.0/mingw73_64/lib/Qt5Core.prl:
 E:/QT5/5.12.0/mingw73_64/lib/qtmaind.prl:
 qmake: FORCE

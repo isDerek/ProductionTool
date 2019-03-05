@@ -38,6 +38,39 @@ PairingTool::~PairingTool()
     delete ui;
 }
 
+void PairingTool::checkCMDID(char CMDID, char DeviceID, QByteArray payload)
+{
+    QByteArray data;
+    switch(CMDID)
+    {
+        case 0x01:
+            deviceMACInfoHandler(DeviceID, payload);
+            break;
+        case 0x02:
+            deviceVersionInfoHandler(DeviceID,payload);
+            break;
+        default:
+            break;
+    }
+}
+
+void PairingTool::deviceMACInfoHandler(char deviceID, QByteArray payload)
+{
+    if(deviceID == 1)
+    {
+       ui->le_mouseMAC->setText(payload);
+    }
+    else if(deviceID == 2)
+    {
+       ui->le_dongleMAC->setText(payload);
+    }
+}
+
+void PairingTool::deviceVersionInfoHandler(char deviceID, QByteArray payload)
+{
+
+}
+
 void PairingTool::SetPairingInfoModel()
 {
     QByteArray pairingIntCode;
@@ -617,7 +650,7 @@ void PairingTool::on_OnOffBtn_Dongle_clicked()
             QMessageBox::critical(this, tr("Error"), tr("Dongle 串口不存在或者被其它程序占用"),QMessageBox::Ok);
             return;
         }
-
+        factorypro->getDeviceMACInfo(1); // 发送获取 Dongle MAC 地址命令
         m_DongleSerial->setReadBufferSize(m_nReadBuffSize);
 
         ui->OnOffBtn_Dongle->setText("断开");
@@ -660,7 +693,7 @@ void PairingTool::on_OnOffBtn_Mouse_clicked()
             QMessageBox::critical(this, tr("Error"), tr("Mouse 串口不存在或者被其它程序占用"),QMessageBox::Ok);
             return;
         }
-
+        factorypro->getDeviceMACInfo(2); // 发送获取 Mouse MAC 地址命令
         m_MouseSerial->setReadBufferSize(m_nReadBuffSize);
 
         ui->OnOffBtn_Mouse->setText("断开");
@@ -688,7 +721,13 @@ void PairingTool::on_baudRCmb_Mouse_currentIndexChanged(int index)
 void PairingTool::slot_RecvDonglePortData()
 {
     QByteArray bytes;
+    char CMDID,deviceID ,CMDStatus,DataLSB,DataMSB, DataLength,checkSum;
+    QByteArray payload;
     bytes = bytes.append(m_DongleSerial->readAll());
+    // 解析协议包
+    factorypro->getReportDataStr(bytes,CMDID,deviceID,CMDStatus,DataLSB,DataMSB,DataLength,checkSum,payload);
+    // 通过 CMDID 来执行响应的 Handler
+    checkCMDID(CMDID,deviceID,payload);
     qDebug() << bytes;
     if(!bytes.isEmpty())
     {
@@ -701,7 +740,13 @@ void PairingTool::slot_RecvDonglePortData()
 void PairingTool::slot_RecvMousePortData()
 {
     QByteArray bytes;
+    char CMDID,deviceID ,CMDStatus,DataLSB,DataMSB, DataLength,checkSum;
+    QByteArray payload;
     bytes = bytes.append(m_MouseSerial->readAll());
+    // 解析协议包
+    factorypro->getReportDataStr(bytes,CMDID,deviceID,CMDStatus,DataLSB,DataMSB,DataLength,checkSum,payload);
+    // 通过 CMDID 来执行响应的 Handler
+    checkCMDID(CMDID,deviceID,payload);
     qDebug() << bytes;
     if(!bytes.isEmpty())
     {
@@ -746,6 +791,8 @@ void PairingTool::on_btn_paringCode_clicked()
    QString mouseMAC = ui->le_mouseMAC->text();
    if(dongleMAC == "" || mouseMAC == "")
    {
+       QMessageBox::critical(nullptr, QObject::tr("异常提醒"),
+       "Dongle 串口或 Mouse 串口没打开，请检查", QMessageBox::Cancel);
        return;
    }
    // 字符串查询是一定要加上单引号！！！
