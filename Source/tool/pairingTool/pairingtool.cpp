@@ -56,13 +56,13 @@ void PairingTool::checkCMDID(char CMDID, char DeviceID, QByteArray payload)
 
 void PairingTool::deviceMACInfoHandler(char deviceID, QByteArray payload)
 {
-    if(deviceID == 1)
+    if(deviceID == 0x01)
     {
-       ui->le_mouseMAC->setText(payload);
+       ui->le_dongleMAC->setText(payload.toHex());
     }
-    else if(deviceID == 2)
+    else if(deviceID == 0x02)
     {
-       ui->le_dongleMAC->setText(payload);
+       ui->le_mouseMAC->setText(payload.toHex());
     }
 }
 
@@ -650,7 +650,6 @@ void PairingTool::on_OnOffBtn_Dongle_clicked()
             QMessageBox::critical(this, tr("Error"), tr("Dongle 串口不存在或者被其它程序占用"),QMessageBox::Ok);
             return;
         }
-        factorypro->getDeviceMACInfo(1); // 发送获取 Dongle MAC 地址命令
         m_DongleSerial->setReadBufferSize(m_nReadBuffSize);
 
         ui->OnOffBtn_Dongle->setText("断开");
@@ -693,9 +692,7 @@ void PairingTool::on_OnOffBtn_Mouse_clicked()
             QMessageBox::critical(this, tr("Error"), tr("Mouse 串口不存在或者被其它程序占用"),QMessageBox::Ok);
             return;
         }
-        factorypro->getDeviceMACInfo(2); // 发送获取 Mouse MAC 地址命令
         m_MouseSerial->setReadBufferSize(m_nReadBuffSize);
-
         ui->OnOffBtn_Mouse->setText("断开");
         m_bMouseOpen = true;
         ui->PortNumCmb_Mouse->setEnabled(false);
@@ -724,11 +721,28 @@ void PairingTool::slot_RecvDonglePortData()
     char CMDID,deviceID ,CMDStatus,DataLSB,DataMSB, DataLength,checkSum;
     QByteArray payload;
     bytes = bytes.append(m_DongleSerial->readAll());
-    // 解析协议包
-    factorypro->getReportDataStr(bytes,CMDID,deviceID,CMDStatus,DataLSB,DataMSB,DataLength,checkSum,payload);
-    // 通过 CMDID 来执行响应的 Handler
-    checkCMDID(CMDID,deviceID,payload);
-    qDebug() << bytes;
+    if(bytes.startsWith('('))
+    {
+        startFilterProFlag = true;
+    }
+    if(startFilterProFlag)
+    {
+        proData.append(bytes);
+    }
+    if(bytes.endsWith(')'))
+    {
+        startFilterProFlag = false;
+        proData = proData.mid(1,proData.length()-2);
+        qDebug()<<proData;
+        // 解析协议包
+        factorypro->getReportDataStr(proData,CMDID,deviceID,CMDStatus,DataLSB,DataMSB,DataLength,checkSum,payload);
+        proData.clear();
+        // 通过 CMDID 来执行响应的 Handler
+        checkCMDID(CMDID,deviceID,payload);
+    }
+
+
+    //qDebug() << bytes;
     if(!bytes.isEmpty())
     {
         QString strRecv = QString::fromLocal8Bit(bytes);
@@ -743,11 +757,26 @@ void PairingTool::slot_RecvMousePortData()
     char CMDID,deviceID ,CMDStatus,DataLSB,DataMSB, DataLength,checkSum;
     QByteArray payload;
     bytes = bytes.append(m_MouseSerial->readAll());
-    // 解析协议包
-    factorypro->getReportDataStr(bytes,CMDID,deviceID,CMDStatus,DataLSB,DataMSB,DataLength,checkSum,payload);
-    // 通过 CMDID 来执行响应的 Handler
-    checkCMDID(CMDID,deviceID,payload);
-    qDebug() << bytes;
+    if(bytes.startsWith('('))
+    {
+        startFilterProFlag = true;
+    }
+    if(startFilterProFlag)
+    {
+        proData.append(bytes);
+    }
+    if(bytes.endsWith(')'))
+    {
+        startFilterProFlag = false;
+        proData = proData.mid(1,proData.length()-2);
+        qDebug()<<proData;
+        // 解析协议包
+        factorypro->getReportDataStr(proData,CMDID,deviceID,CMDStatus,DataLSB,DataMSB,DataLength,checkSum,payload);
+        proData.clear();
+        // 通过 CMDID 来执行响应的 Handler
+        checkCMDID(CMDID,deviceID,payload);
+    }
+//    qDebug() << bytes;
     if(!bytes.isEmpty())
     {
         QString strRecv = QString::fromLocal8Bit(bytes);
@@ -777,7 +806,20 @@ void PairingTool::on_btn_registerDevice_clicked()
 
 void PairingTool::on_btn_checkVersionId_clicked()
 {
-
+    QByteArray SendData;
+    SendData = factorypro->getDeviceMACInfo(1); // 发送获取 Dongle MAC 地址命令
+//    factorypro->getDeviceMACInfo(2); // 发送获取 Mouse MAC 地址命令
+    SendData.insert(0,"(");
+    SendData.append(")");
+//    qDebug()<<SendData;
+    if(m_DongleSerial->isOpen())
+    {
+        m_DongleSerial->write(SendData);
+    }
+    if(m_MouseSerial->isOpen())
+    {
+        m_MouseSerial->write(SendData);
+    }
 }
 
 void PairingTool::on_btn_paringCode_clicked()

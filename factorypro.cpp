@@ -42,6 +42,14 @@ void FactoryPro::getReportDataStr(QByteArray protocolData, char &CMDID,char &dev
         payload[i] = protocolData[6+i];
     }
     checkSum = protocolData[6+DataLength];
+//    qDebug()<<"CMDID = "<<CMDID;
+//    qDebug()<<"deviceID = "<<deviceID;
+//    qDebug()<<"CMDStatus = "<<CMDStatus;
+//    qDebug()<<"DataLSB = "<<DataLSB;
+//    qDebug()<<"DataMSB = "<<DataMSB;
+//    qDebug()<<"DataLength = "<<DataLength;
+//    qDebug()<<"payload = "<<payload;
+//    qDebug()<<"checkSum"<<checkSum;
 }
 
 // 返回获取设备 MAC 信息协议
@@ -52,7 +60,7 @@ QByteArray FactoryPro::getDeviceMACInfo(char deviceID)
     char CMDStatus = 0x00;
     char DataLSB = 0x00;
     char DataMSB = 0x00;
-    char DataLength = 0x01;
+    char DataLength = 0x00;
     QByteArray payload;
     SendData = setReportDataStr(CMDID, deviceID, CMDStatus, DataLSB, DataMSB, DataLength, payload);
     return SendData;

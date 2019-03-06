@@ -95,6 +95,8 @@ private:
     QSqlTableModel *pairingInfoModel; // 声明分配码信息模型对象
     QByteArray DongleMACAddress; // Dongle MAC 地址
     QByteArray MouseMACAddress; // Mouse MAC 地址
+    bool startFilterProFlag = false ; // 开始提取协议数据
+    QByteArray proData; // 协议数据 Buffer
 };
 
 #endif // PAIRINGTOOL_H
