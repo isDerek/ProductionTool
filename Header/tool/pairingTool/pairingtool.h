@@ -74,10 +74,12 @@ private slots:
 
     void on_btn_registerDevice_clicked(); // 设备注册按钮
 
-    void on_btn_checkVersionId_clicked(); // 查看版本按钮
-
     void on_btn_paringCode_clicked(); // 分配配对码按钮
 
+
+    void on_btn_checkDongleMACAddress_clicked();
+
+    void on_btn_checkMouseMACAddress_clicked();
 
 private:
     Ui::PairingTool *ui;

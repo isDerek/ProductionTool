@@ -78,7 +78,6 @@ public:
     QLabel *label_7;
     QComboBox *DPaityCmb_Mouse;
     QPushButton *btn_registerDevice;
-    QPushButton *btn_checkVersionId;
     QPushButton *btn_paringCode;
     QGroupBox *group_dongleData;
     QTextEdit *te_dongleRevData;
@@ -90,6 +89,12 @@ public:
     QLineEdit *le_pairingCode;
     QLabel *label_14;
     QLabel *label_15;
+    QGroupBox *groupBox;
+    QPushButton *btn_checkDongleVersionId;
+    QPushButton *btn_checkDongleMACAddress;
+    QGroupBox *groupBox_2;
+    QPushButton *btn_checkMouseVersionId;
+    QPushButton *btn_checkMouseMACAddress;
     QWidget *tab_2;
     QTableView *tbv_Dongle;
     QWidget *tab_3;
@@ -103,12 +108,12 @@ public:
     {
         if (PairingTool->objectName().isEmpty())
             PairingTool->setObjectName(QString::fromUtf8("PairingTool"));
-        PairingTool->resize(734, 572);
+        PairingTool->resize(734, 654);
         centralwidget = new QWidget(PairingTool);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         tabWidget = new QTabWidget(centralwidget);
         tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
-        tabWidget->setGeometry(QRect(0, 0, 741, 521));
+        tabWidget->setGeometry(QRect(0, 0, 741, 601));
         tab = new QWidget();
         tab->setObjectName(QString::fromUtf8("tab"));
         group_Dongle = new QGroupBox(tab);
@@ -340,22 +345,19 @@ public:
 
         btn_registerDevice = new QPushButton(tab);
         btn_registerDevice->setObjectName(QString::fromUtf8("btn_registerDevice"));
-        btn_registerDevice->setGeometry(QRect(430, 210, 81, 28));
-        btn_checkVersionId = new QPushButton(tab);
-        btn_checkVersionId->setObjectName(QString::fromUtf8("btn_checkVersionId"));
-        btn_checkVersionId->setGeometry(QRect(530, 210, 81, 28));
+        btn_registerDevice->setGeometry(QRect(540, 210, 81, 28));
         btn_paringCode = new QPushButton(tab);
         btn_paringCode->setObjectName(QString::fromUtf8("btn_paringCode"));
         btn_paringCode->setGeometry(QRect(630, 210, 81, 28));
         group_dongleData = new QGroupBox(tab);
         group_dongleData->setObjectName(QString::fromUtf8("group_dongleData"));
-        group_dongleData->setGeometry(QRect(0, 260, 361, 221));
+        group_dongleData->setGeometry(QRect(0, 350, 361, 221));
         te_dongleRevData = new QTextEdit(group_dongleData);
         te_dongleRevData->setObjectName(QString::fromUtf8("te_dongleRevData"));
         te_dongleRevData->setGeometry(QRect(10, 20, 341, 191));
         group_mouseData = new QGroupBox(tab);
         group_mouseData->setObjectName(QString::fromUtf8("group_mouseData"));
-        group_mouseData->setGeometry(QRect(370, 260, 361, 221));
+        group_mouseData->setGeometry(QRect(370, 350, 361, 221));
         te_mouseRevData = new QTextEdit(group_mouseData);
         te_mouseRevData->setObjectName(QString::fromUtf8("te_mouseRevData"));
         te_mouseRevData->setGeometry(QRect(10, 20, 341, 191));
@@ -377,6 +379,24 @@ public:
         label_15 = new QLabel(tab);
         label_15->setObjectName(QString::fromUtf8("label_15"));
         label_15->setGeometry(QRect(460, 110, 141, 41));
+        groupBox = new QGroupBox(tab);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        groupBox->setGeometry(QRect(10, 259, 191, 81));
+        btn_checkDongleVersionId = new QPushButton(groupBox);
+        btn_checkDongleVersionId->setObjectName(QString::fromUtf8("btn_checkDongleVersionId"));
+        btn_checkDongleVersionId->setGeometry(QRect(20, 20, 121, 28));
+        btn_checkDongleMACAddress = new QPushButton(groupBox);
+        btn_checkDongleMACAddress->setObjectName(QString::fromUtf8("btn_checkDongleMACAddress"));
+        btn_checkDongleMACAddress->setGeometry(QRect(20, 50, 121, 28));
+        groupBox_2 = new QGroupBox(tab);
+        groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
+        groupBox_2->setGeometry(QRect(220, 260, 191, 81));
+        btn_checkMouseVersionId = new QPushButton(groupBox_2);
+        btn_checkMouseVersionId->setObjectName(QString::fromUtf8("btn_checkMouseVersionId"));
+        btn_checkMouseVersionId->setGeometry(QRect(20, 20, 121, 28));
+        btn_checkMouseMACAddress = new QPushButton(groupBox_2);
+        btn_checkMouseMACAddress->setObjectName(QString::fromUtf8("btn_checkMouseMACAddress"));
+        btn_checkMouseMACAddress->setGeometry(QRect(20, 50, 121, 28));
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QString::fromUtf8("tab_2"));
@@ -439,7 +459,6 @@ public:
         label_11->setText(QApplication::translate("PairingTool", "\344\270\262\345\217\243\345\217\267", nullptr));
         label_7->setText(QApplication::translate("PairingTool", "\346\240\241\351\252\214\344\275\215", nullptr));
         btn_registerDevice->setText(QApplication::translate("PairingTool", "\350\256\276\345\244\207\346\263\250\345\206\214", nullptr));
-        btn_checkVersionId->setText(QApplication::translate("PairingTool", "\346\237\245\350\257\242\347\211\210\346\234\254\345\217\267", nullptr));
         btn_paringCode->setText(QApplication::translate("PairingTool", "\345\210\206\351\205\215\351\205\215\345\257\271\347\240\201", nullptr));
         group_dongleData->setTitle(QApplication::translate("PairingTool", "Dongle \346\225\260\346\215\256\347\252\227\345\217\243", nullptr));
         group_mouseData->setTitle(QApplication::translate("PairingTool", "Mouse \346\225\260\346\215\256\347\252\227\345\217\243", nullptr));
@@ -447,6 +466,12 @@ public:
         le_dongleMAC->setText(QString());
         label_14->setText(QApplication::translate("PairingTool", "\345\210\206\351\205\215\347\240\201\357\274\232", nullptr));
         label_15->setText(QApplication::translate("PairingTool", "Mouse MAC \345\234\260\345\235\200\357\274\232", nullptr));
+        groupBox->setTitle(QApplication::translate("PairingTool", "Dongle \350\256\276\345\244\207\346\223\215\344\275\234", nullptr));
+        btn_checkDongleVersionId->setText(QApplication::translate("PairingTool", "\346\237\245\350\257\242\347\211\210\346\234\254\345\217\267", nullptr));
+        btn_checkDongleMACAddress->setText(QApplication::translate("PairingTool", "\346\237\245\350\257\242 MAC \345\234\260\345\235\200", nullptr));
+        groupBox_2->setTitle(QApplication::translate("PairingTool", "Mouse \350\256\276\345\244\207\346\223\215\344\275\234", nullptr));
+        btn_checkMouseVersionId->setText(QApplication::translate("PairingTool", "\346\237\245\350\257\242\347\211\210\346\234\254\345\217\267", nullptr));
+        btn_checkMouseMACAddress->setText(QApplication::translate("PairingTool", "\346\237\245\350\257\242 MAC \345\234\260\345\235\200", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("PairingTool", "\350\256\276\345\244\207\346\223\215\344\275\234", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("PairingTool", "Dongle \346\225\260\346\215\256\345\272\223\347\256\241\347\220\206", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("PairingTool", "Mouse \346\225\260\346\215\256\345\272\223\347\256\241\347\220\206", nullptr));

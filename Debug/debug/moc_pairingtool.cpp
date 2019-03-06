@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_PairingTool_t {
-    QByteArrayData data[13];
-    char stringdata0[295];
+    QByteArrayData data[14];
+    char stringdata0[338];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -42,8 +42,9 @@ QT_MOC_LITERAL(7, 126, 38), // "on_baudRCmb_Dongle_currentInd..."
 QT_MOC_LITERAL(8, 165, 5), // "index"
 QT_MOC_LITERAL(9, 171, 37), // "on_baudRCmb_Mouse_currentInde..."
 QT_MOC_LITERAL(10, 209, 29), // "on_btn_registerDevice_clicked"
-QT_MOC_LITERAL(11, 239, 29), // "on_btn_checkVersionId_clicked"
-QT_MOC_LITERAL(12, 269, 25) // "on_btn_paringCode_clicked"
+QT_MOC_LITERAL(11, 239, 25), // "on_btn_paringCode_clicked"
+QT_MOC_LITERAL(12, 265, 36), // "on_btn_checkDongleMACAddress_..."
+QT_MOC_LITERAL(13, 302, 35) // "on_btn_checkMouseMACAddress_c..."
 
     },
     "PairingTool\0on_OnOffBtn_Dongle_clicked\0"
@@ -52,8 +53,9 @@ QT_MOC_LITERAL(12, 269, 25) // "on_btn_paringCode_clicked"
     "rfSerialPort\0on_baudRCmb_Dongle_currentIndexChanged\0"
     "index\0on_baudRCmb_Mouse_currentIndexChanged\0"
     "on_btn_registerDevice_clicked\0"
-    "on_btn_checkVersionId_clicked\0"
-    "on_btn_paringCode_clicked"
+    "on_btn_paringCode_clicked\0"
+    "on_btn_checkDongleMACAddress_clicked\0"
+    "on_btn_checkMouseMACAddress_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -63,7 +65,7 @@ static const uint qt_meta_data_PairingTool[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -71,16 +73,17 @@ static const uint qt_meta_data_PairingTool[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   64,    2, 0x08 /* Private */,
-       3,    0,   65,    2, 0x08 /* Private */,
-       4,    0,   66,    2, 0x08 /* Private */,
-       5,    0,   67,    2, 0x08 /* Private */,
-       6,    0,   68,    2, 0x08 /* Private */,
-       7,    1,   69,    2, 0x08 /* Private */,
-       9,    1,   72,    2, 0x08 /* Private */,
-      10,    0,   75,    2, 0x08 /* Private */,
-      11,    0,   76,    2, 0x08 /* Private */,
-      12,    0,   77,    2, 0x08 /* Private */,
+       1,    0,   69,    2, 0x08 /* Private */,
+       3,    0,   70,    2, 0x08 /* Private */,
+       4,    0,   71,    2, 0x08 /* Private */,
+       5,    0,   72,    2, 0x08 /* Private */,
+       6,    0,   73,    2, 0x08 /* Private */,
+       7,    1,   74,    2, 0x08 /* Private */,
+       9,    1,   77,    2, 0x08 /* Private */,
+      10,    0,   80,    2, 0x08 /* Private */,
+      11,    0,   81,    2, 0x08 /* Private */,
+      12,    0,   82,    2, 0x08 /* Private */,
+      13,    0,   83,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -90,6 +93,7 @@ static const uint qt_meta_data_PairingTool[] = {
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,    8,
     QMetaType::Void, QMetaType::Int,    8,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -111,8 +115,9 @@ void PairingTool::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 5: _t->on_baudRCmb_Dongle_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 6: _t->on_baudRCmb_Mouse_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 7: _t->on_btn_registerDevice_clicked(); break;
-        case 8: _t->on_btn_checkVersionId_clicked(); break;
-        case 9: _t->on_btn_paringCode_clicked(); break;
+        case 8: _t->on_btn_paringCode_clicked(); break;
+        case 9: _t->on_btn_checkDongleMACAddress_clicked(); break;
+        case 10: _t->on_btn_checkMouseMACAddress_clicked(); break;
         default: ;
         }
     }
@@ -147,13 +152,13 @@ int PairingTool::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 11;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 11)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 10;
+        _id -= 11;
     }
     return _id;
 }

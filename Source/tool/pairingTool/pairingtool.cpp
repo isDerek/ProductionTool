@@ -10,7 +10,7 @@ PairingTool::PairingTool(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("Pairing Tool");
-    this->setFixedSize(734,572);
+    this->setFixedSize(734,654);
     m_bDongleOpen = false;
     m_bMouseOpen = false;
     m_nReadBuffSize = 64;
@@ -804,24 +804,6 @@ void PairingTool::on_btn_registerDevice_clicked()
 
 }
 
-void PairingTool::on_btn_checkVersionId_clicked()
-{
-    QByteArray SendData;
-    SendData = factorypro->getDeviceMACInfo(1); // 发送获取 Dongle MAC 地址命令
-//    factorypro->getDeviceMACInfo(2); // 发送获取 Mouse MAC 地址命令
-    SendData.insert(0,"(");
-    SendData.append(")");
-//    qDebug()<<SendData;
-    if(m_DongleSerial->isOpen())
-    {
-        m_DongleSerial->write(SendData);
-    }
-    if(m_MouseSerial->isOpen())
-    {
-        m_MouseSerial->write(SendData);
-    }
-}
-
 void PairingTool::on_btn_paringCode_clicked()
 {
    QByteArray pairingIntCode;
@@ -834,7 +816,7 @@ void PairingTool::on_btn_paringCode_clicked()
    if(dongleMAC == "" || mouseMAC == "")
    {
        QMessageBox::critical(nullptr, QObject::tr("异常提醒"),
-       "Dongle 串口或 Mouse 串口没打开，请检查", QMessageBox::Cancel);
+       "Dongle MAC 地址或 Mouse MAC 地址不存在，请检查", QMessageBox::Cancel);
        return;
    }
    // 字符串查询是一定要加上单引号！！！
@@ -877,4 +859,30 @@ void PairingTool::on_btn_paringCode_clicked()
    // 通过十进制转 6 个字节的十进制字符串作为配对码
    toolsfuc->IntToBytesIntStr(pairingCode,6,pairingIntCode);
    ui->le_pairingCode->setText(pairingIntCode);
+}
+
+void PairingTool::on_btn_checkDongleMACAddress_clicked()
+{
+    QByteArray SendData;
+    SendData = factorypro->getDeviceMACInfo(1); // 发送获取 Dongle MAC 地址命令
+    SendData.insert(0,"(");
+    SendData.append(")");
+//    qDebug()<<SendData;
+    if(m_DongleSerial->isOpen())
+    {
+        m_DongleSerial->write(SendData);
+    }
+}
+
+void PairingTool::on_btn_checkMouseMACAddress_clicked()
+{
+    QByteArray SendData;
+    SendData = factorypro->getDeviceMACInfo(2); // 发送获取 Mouse MAC 地址命令
+    SendData.insert(0,"(");
+    SendData.append(")");
+//    qDebug()<<SendData;
+    if(m_MouseSerial->isOpen())
+    {
+        m_MouseSerial->write(SendData);
+    }
 }
