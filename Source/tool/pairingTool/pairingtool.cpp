@@ -197,6 +197,8 @@ void PairingTool::handleDongleSerialError(QSerialPort::SerialPortError error)
         {
             m_DongleSerial->clearError();
             m_DongleSerial->close();
+            QMessageBox::critical(nullptr, QObject::tr("异常提醒"),
+            "Dongle 串口异常或已拔出，请检查", QMessageBox::Cancel);
             ui->OnOffBtn_Dongle->setText("打开");
             m_bDongleOpen = false;
             ui->PortNumCmb_Dongle->setEnabled(true);
@@ -219,6 +221,8 @@ void PairingTool::handleMouseSerialError(QSerialPort::SerialPortError error)
         {
             m_MouseSerial->clearError();
             m_MouseSerial->close();
+            QMessageBox::critical(nullptr, QObject::tr("异常提醒"),
+            "Mouse 串口异常或已拔出，请检查", QMessageBox::Cancel);
             ui->OnOffBtn_Mouse->setText("打开");
             m_bMouseOpen = false;
             ui->PortNumCmb_Mouse->setEnabled(true);
