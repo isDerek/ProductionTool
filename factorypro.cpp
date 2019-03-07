@@ -63,5 +63,24 @@ QByteArray FactoryPro::getDeviceMACInfo(char deviceID)
     char DataLength = 0x00;
     QByteArray payload;
     SendData = setReportDataStr(CMDID, deviceID, CMDStatus, DataLSB, DataMSB, DataLength, payload);
+    SendData.insert(0,"(");
+    SendData.append(")");
+    return SendData;
+}
+
+// 发送设备配对码
+QByteArray FactoryPro::postPairingInfo(char deviceID, QByteArray pairingCode)
+{
+    QByteArray SendData;
+    QByteArray payload;
+    char CMDID = 0x03;
+    char CMDStatus = 0x00;
+    char DataLSB = 0x00;
+    char DataMSB = 0x00;
+    char DataLength = char(pairingCode.length());
+    payload = pairingCode;
+    SendData = setReportDataStr(CMDID, deviceID, CMDStatus, DataLSB, DataMSB, DataLength, payload);
+    SendData.insert(0,"(");
+    SendData.append(")");
     return SendData;
 }

@@ -13,7 +13,7 @@ public:
     void writeSql(QString table,QString field,QString value);
     void deleteSql(QString table,QString field,QString value);
     void updateSql(QString table, QString updatefield,  QString checkfield, QString updateValue, QString checkValue);
-    bool checkSql(QString table,QString field,QString value,QString &pairingCode);
+    bool checkSql(QString table,QString field,QString value);
 };
 
 #endif // MYSQL_H

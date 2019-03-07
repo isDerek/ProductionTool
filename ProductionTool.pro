@@ -39,7 +39,8 @@ SOURCES += \
     Source/tool/pairingTool/mysql.cpp \
     Source/tool/pairingTool/pairingtool.cpp \
     toolsfuc.cpp \
-    factorypro.cpp
+    factorypro.cpp \
+    Source/tool/pairingTool/devicemodel.cpp
 
 HEADERS += \
     Header/setting/setting.h \
@@ -53,7 +54,8 @@ HEADERS += \
     Header/tool/pairingTool/mysql.h \
     Header/tool/pairingTool/pairingtool.h \
     toolsfuc.h \
-    factorypro.h
+    factorypro.h \
+    Header/tool/pairingTool/devicemodel.h
 
 FORMS += \
     UI/setting/setting.ui \

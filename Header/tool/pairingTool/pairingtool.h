@@ -13,6 +13,7 @@
 #include "mysql.h"
 #include "toolsfuc.h"
 #include "factorypro.h"
+#include "devicemodel.h"
 
 namespace Ui {
 class PairingTool;
@@ -57,6 +58,7 @@ public:
     void checkCMDID(char CMDID,char DeviceID, QByteArray payload); // 查看 CMDID，并执行对应的执行函数
     void deviceMACInfoHandler(char deviceID ,QByteArray payload); // 设备 MAC 信息处理函数
     void deviceVersionInfoHandler(char deviceID, QByteArray payload); // 设备版本信息处理函数
+
 private slots:
     void on_OnOffBtn_Dongle_clicked(); // Dongle 打开串口按钮
 
@@ -76,10 +78,10 @@ private slots:
 
     void on_btn_paringCode_clicked(); // 分配配对码按钮
 
+    void on_btn_checkDongleMACAddress_clicked(); // 查询 Dongle 设备 MAC 地址
 
-    void on_btn_checkDongleMACAddress_clicked();
+    void on_btn_checkMouseMACAddress_clicked(); // 查询 Mouse 设备 MAC 地址
 
-    void on_btn_checkMouseMACAddress_clicked();
 
 private:
     Ui::PairingTool *ui;
@@ -92,6 +94,7 @@ private:
     MySql *mysql = new MySql; // 实例化 MySql 对象
     ToolsFuc *toolsfuc = new ToolsFuc; // 实例化工具类对象
     FactoryPro *factorypro = new FactoryPro; // 实例化工厂协议类对象
+    DeviceModel *deviceModel = new DeviceModel; // 实例化设备模型
     QSqlTableModel *dongleModel; // 声明 Dongle 模型独享
     QSqlTableModel *mouseModel; // 声明鼠标模型对象
     QSqlTableModel *pairingInfoModel; // 声明分配码信息模型对象

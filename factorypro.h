@@ -11,7 +11,7 @@ public:
     void getReportDataStr(QByteArray protocolData, char &CMDID, char &deviceID , char &CMDStatus, char &DataLSB, char &DataMSB, char &DataLength, char &checkSum, QByteArray &payload);
     QByteArray getDeviceMACInfo(char deviceID); // 获取设备的 MAC 地址
     QByteArray getDeviceVersionInfo(char deviceID); // 获取设备版本信息
-    void postPairingInfo(char deviceID); // 下发配对码命令
+    QByteArray postPairingInfo(char deviceID, QByteArray pairingCode); // 下发配对码命令
 };
 
 #endif // FACTORYPRO_H

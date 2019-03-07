@@ -11,6 +11,7 @@ release/mysql.o
 release/pairingtool.o
 release/toolsfuc.o
 release/factorypro.o
+release/devicemodel.o
 release/moc_setting.o
 release/moc_setting_carrieroffsetanddrift.o
 release/moc_setting_maximuminputpower.o

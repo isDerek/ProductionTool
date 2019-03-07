@@ -26,8 +26,8 @@ PairingTool::PairingTool(QWidget *parent) :
     SetDongleModel(); // 设置 Dongle 数据库模型进表格
     SetMouseModel(); // 设置 Mouse 数据库模型进表格
     SetPairingInfoModel(); // 设置 配对码数据库模型进表格
-//    ui->le_mouseMAC->setEnabled(false);
-//    ui->le_dongleMAC->setEnabled(false);
+    ui->le_mouseMAC->setEnabled(false);
+    ui->le_dongleMAC->setEnabled(false);
     ui->le_pairingCode->setEnabled(false);
     ui->te_mouseRevData->setReadOnly(true);
     ui->te_dongleRevData->setReadOnly(true);
@@ -56,10 +56,23 @@ void PairingTool::checkCMDID(char CMDID, char DeviceID, QByteArray payload)
 
 void PairingTool::deviceMACInfoHandler(char deviceID, QByteArray payload)
 {
+    // Dongle 设备
     if(deviceID == 0x01)
     {
        ui->le_dongleMAC->setText(payload.toHex());
+       if(deviceModel->deviceCheck(deviceID,payload))
+       {
+            return;
+       }
+       else
+       {
+           deviceModel->deviceRegister(deviceID,payload);
+           dongleModel->select();
+           ui->tbv_ParingInfo->setModel(dongleModel);
+       }
+
     }
+    // Mouse 设备
     else if(deviceID == 0x02)
     {
        ui->le_mouseMAC->setText(payload.toHex());
@@ -173,6 +186,7 @@ void PairingTool::handleDongleSerialError(QSerialPort::SerialPortError error)
             ui->StopBCmb_Dongle->setEnabled(true);
             ui->FlowCtrlCmb_Dongle->setEnabled(true);
             ui->baudRCmb_Dongle->setEnabled(true);
+            ui->le_dongleMAC->clear();
             SetSerState();
         }
     }
@@ -194,6 +208,7 @@ void PairingTool::handleMouseSerialError(QSerialPort::SerialPortError error)
             ui->StopBCmb_Mouse->setEnabled(true);
             ui->FlowCtrlCmb_Mouse->setEnabled(true);
             ui->baudRCmb_Mouse->setEnabled(true);
+            ui->le_mouseMAC->clear();
             SetSerState();
         }
     }
@@ -733,7 +748,7 @@ void PairingTool::slot_RecvDonglePortData()
     {
         startFilterProFlag = false;
         proData = proData.mid(1,proData.length()-2);
-        qDebug()<<proData;
+//        qDebug()<<proData;
         // 解析协议包
         factorypro->getReportDataStr(proData,CMDID,deviceID,CMDStatus,DataLSB,DataMSB,DataLength,checkSum,payload);
         proData.clear();
@@ -769,7 +784,7 @@ void PairingTool::slot_RecvMousePortData()
     {
         startFilterProFlag = false;
         proData = proData.mid(1,proData.length()-2);
-        qDebug()<<proData;
+//        qDebug()<<proData;
         // 解析协议包
         factorypro->getReportDataStr(proData,CMDID,deviceID,CMDStatus,DataLSB,DataMSB,DataLength,checkSum,payload);
         proData.clear();
@@ -807,6 +822,7 @@ void PairingTool::on_btn_registerDevice_clicked()
 void PairingTool::on_btn_paringCode_clicked()
 {
    QByteArray pairingIntCode;
+   QByteArray sendDongleCMDBuffer,sendMouseCMDBuffer;
    QSqlRecord newPairingRecord;
    QSqlTableModel *newPairingModel = new QSqlTableModel;
    newPairingModel->setTable("pairinginfo");
@@ -819,6 +835,11 @@ void PairingTool::on_btn_paringCode_clicked()
        "Dongle MAC 地址或 Mouse MAC 地址不存在，请检查", QMessageBox::Cancel);
        return;
    }
+   // 下发配对码给对应设备
+   sendDongleCMDBuffer = factorypro->postPairingInfo(0x01,ui->le_pairingCode->text().toLatin1());
+   sendMouseCMDBuffer = factorypro->postPairingInfo(0x02,ui->le_pairingCode->text().toLatin1());
+   m_DongleSerial->write(sendDongleCMDBuffer);
+   m_MouseSerial->write(sendMouseCMDBuffer);
    // 字符串查询是一定要加上单引号！！！
    newPairingModel->setFilter(QString("dongleMac = '%1' or mouseMac = '%2'").arg(dongleMAC).arg(mouseMAC));
    if(newPairingModel->select())
@@ -859,14 +880,13 @@ void PairingTool::on_btn_paringCode_clicked()
    // 通过十进制转 6 个字节的十进制字符串作为配对码
    toolsfuc->IntToBytesIntStr(pairingCode,6,pairingIntCode);
    ui->le_pairingCode->setText(pairingIntCode);
+
 }
 
 void PairingTool::on_btn_checkDongleMACAddress_clicked()
 {
     QByteArray SendData;
     SendData = factorypro->getDeviceMACInfo(1); // 发送获取 Dongle MAC 地址命令
-    SendData.insert(0,"(");
-    SendData.append(")");
 //    qDebug()<<SendData;
     if(m_DongleSerial->isOpen())
     {
@@ -878,8 +898,6 @@ void PairingTool::on_btn_checkMouseMACAddress_clicked()
 {
     QByteArray SendData;
     SendData = factorypro->getDeviceMACInfo(2); // 发送获取 Mouse MAC 地址命令
-    SendData.insert(0,"(");
-    SendData.append(")");
 //    qDebug()<<SendData;
     if(m_MouseSerial->isOpen())
     {

@@ -11,6 +11,7 @@ debug/mysql.o
 debug/pairingtool.o
 debug/toolsfuc.o
 debug/factorypro.o
+debug/devicemodel.o
 debug/moc_setting.o
 debug/moc_setting_carrieroffsetanddrift.o
 debug/moc_setting_maximuminputpower.o

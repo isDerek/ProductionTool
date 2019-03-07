@@ -32,7 +32,6 @@ void MySql::writeSql(QString table, QString field, QString value)
     QString str = QString("insert into %1(%2) values('%3')").arg(table).arg(field).arg(value);
     QSqlQuery query;
     query.exec(str);
-    qDebug()<<"插入成功";
 }
 
 void MySql::deleteSql(QString table, QString field, QString value)
@@ -56,17 +55,12 @@ void MySql::updateSql(QString table, QString updatefield,  QString checkfield, Q
 //    qDebug()<<"更新成功";
 }
 
-bool MySql::checkSql(QString table, QString field, QString value, QString &pairingCode)
+bool MySql::checkSql(QString table, QString field, QString value)
 {
     QString str = QString("select *from %1 where %2 = '%3'").arg(table).arg(field).arg(value);
     QSqlQuery query;
     query.exec(str);
-
-    while (query.next())
-    {
-        pairingCode = query.value(3).toString();
-    }
-    if(pairingCode != "")
+    if(query.next())
     {
         return true;
     }
