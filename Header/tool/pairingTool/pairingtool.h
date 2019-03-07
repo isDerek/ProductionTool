@@ -85,6 +85,10 @@ private slots:
 
     void on_btn_checkMouseVersionId_clicked();
 
+    void on_btn_dongleDataClear_clicked();
+
+    void on_btn_mouseDataClear_clicked();
+
 private:
     Ui::PairingTool *ui;
     QLabel *m_DongleSerStateLbl; // Dongle 串口状态

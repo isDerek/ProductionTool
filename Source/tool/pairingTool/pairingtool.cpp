@@ -10,7 +10,7 @@ PairingTool::PairingTool(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("Pairing Tool");
-    this->setFixedSize(734,654);
+    this->setFixedSize(741,749);
     m_bDongleOpen = false;
     m_bMouseOpen = false;
     m_nReadBuffSize = 64;
@@ -76,12 +76,31 @@ void PairingTool::deviceMACInfoHandler(char deviceID, QByteArray payload)
     else if(deviceID == 0x02)
     {
        ui->le_mouseMAC->setText(payload.toHex());
+       if(deviceModel->deviceCheck(deviceID,payload))
+       {
+            return;
+       }
+       else
+       {
+           deviceModel->deviceRegister(deviceID,payload);
+           dongleModel->select();
+           ui->tbv_ParingInfo->setModel(dongleModel);
+       }
     }
 }
 
 void PairingTool::deviceVersionInfoHandler(char deviceID, QByteArray payload)
 {
-
+    // Dongle 设备
+    if(deviceID == 0x01)
+    {
+       ui->le_dongleVersion->setText(payload.toHex());
+    }
+    // Mouse 设备
+    else if(deviceID == 0x02)
+    {
+       ui->le_mouseVersion->setText(payload.toHex());
+    }
 }
 
 void PairingTool::SetPairingInfoModel()
@@ -882,44 +901,58 @@ void PairingTool::on_btn_paringCode_clicked()
 
 void PairingTool::on_btn_checkDongleMACAddress_clicked()
 {
+    if(m_DongleSerial->isOpen())
+    {
     QByteArray SendData;
     SendData = factorypro->getDeviceMACInfo(1); // 发送获取 Dongle MAC 地址命令
 //    qDebug()<<SendData;
-    if(m_DongleSerial->isOpen())
-    {
+
         m_DongleSerial->write(SendData);
     }
 }
 
 void PairingTool::on_btn_checkMouseMACAddress_clicked()
 {
-    QByteArray SendData;
-    SendData = factorypro->getDeviceMACInfo(2); // 发送获取 Mouse MAC 地址命令
-//    qDebug()<<SendData;
     if(m_MouseSerial->isOpen())
     {
+        QByteArray SendData;
+        SendData = factorypro->getDeviceMACInfo(2); // 发送获取 Mouse MAC 地址命令
+//    qDebug()<<SendData;
+
         m_MouseSerial->write(SendData);
     }
 }
 
 void PairingTool::on_btn_checkDongleVersionId_clicked()
 {
-    QByteArray SendData;
-    SendData = factorypro->getDeviceVersionInfo(1); // 发送获取 Dongle 版本号命令
-//    qDebug()<<SendData;
     if(m_DongleSerial->isOpen())
     {
+        QByteArray SendData;
+        SendData = factorypro->getDeviceVersionInfo(1); // 发送获取 Dongle 版本号命令
+//    qDebug()<<SendData;
+
         m_DongleSerial->write(SendData);
     }
 }
 
 void PairingTool::on_btn_checkMouseVersionId_clicked()
 {
-    QByteArray SendData;
-    SendData = factorypro->getDeviceVersionInfo(2); // 发送获取 Mouse 版本号命令
-//    qDebug()<<SendData;
     if(m_MouseSerial->isOpen())
     {
+        QByteArray SendData;
+        SendData = factorypro->getDeviceVersionInfo(2); // 发送获取 Mouse 版本号命令
+//    qDebug()<<SendData;
+
         m_MouseSerial->write(SendData);
     }
+}
+
+void PairingTool::on_btn_dongleDataClear_clicked()
+{
+    ui->te_dongleRevData->clear();
+}
+
+void PairingTool::on_btn_mouseDataClear_clicked()
+{
+    ui->te_mouseRevData->clear();
 }
