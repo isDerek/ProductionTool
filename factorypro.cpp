@@ -84,3 +84,20 @@ QByteArray FactoryPro::postPairingInfo(char deviceID, QByteArray pairingCode)
     SendData.append(")");
     return SendData;
 }
+
+// 查看设备版本号
+
+QByteArray FactoryPro::getDeviceVersionInfo(char deviceID)
+{
+    QByteArray SendData;
+    QByteArray payload;
+    char CMDID = 0x02;
+    char CMDStatus = 0x00;
+    char DataLSB = 0x00;
+    char DataMSB = 0x00;
+    char DataLength = 0x00;
+    SendData = setReportDataStr(CMDID, deviceID, CMDStatus, DataLSB, DataMSB, DataLength, payload);
+    SendData.insert(0,"(");
+    SendData.append(")");
+    return SendData;
+}

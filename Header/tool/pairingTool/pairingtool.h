@@ -74,14 +74,16 @@ private slots:
 
     void on_baudRCmb_Mouse_currentIndexChanged(int index);// Mouse 自定义波特率
 
-    void on_btn_registerDevice_clicked(); // 设备注册按钮
-
     void on_btn_paringCode_clicked(); // 分配配对码按钮
 
     void on_btn_checkDongleMACAddress_clicked(); // 查询 Dongle 设备 MAC 地址
 
     void on_btn_checkMouseMACAddress_clicked(); // 查询 Mouse 设备 MAC 地址
 
+
+    void on_btn_checkDongleVersionId_clicked();
+
+    void on_btn_checkMouseVersionId_clicked();
 
 private:
     Ui::PairingTool *ui;

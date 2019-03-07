@@ -77,7 +77,6 @@ public:
     QHBoxLayout *horizontalLayout_7;
     QLabel *label_7;
     QComboBox *DPaityCmb_Mouse;
-    QPushButton *btn_registerDevice;
     QPushButton *btn_paringCode;
     QGroupBox *group_dongleData;
     QTextEdit *te_dongleRevData;
@@ -343,12 +342,9 @@ public:
 
         gridLayout_3->addLayout(horizontalLayout_7, 2, 0, 1, 1);
 
-        btn_registerDevice = new QPushButton(tab);
-        btn_registerDevice->setObjectName(QString::fromUtf8("btn_registerDevice"));
-        btn_registerDevice->setGeometry(QRect(540, 210, 81, 28));
         btn_paringCode = new QPushButton(tab);
         btn_paringCode->setObjectName(QString::fromUtf8("btn_paringCode"));
-        btn_paringCode->setGeometry(QRect(630, 210, 81, 28));
+        btn_paringCode->setGeometry(QRect(630, 160, 81, 28));
         group_dongleData = new QGroupBox(tab);
         group_dongleData->setObjectName(QString::fromUtf8("group_dongleData"));
         group_dongleData->setGeometry(QRect(0, 350, 361, 221));
@@ -433,7 +429,7 @@ public:
 
         retranslateUi(PairingTool);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(PairingTool);
@@ -458,7 +454,6 @@ public:
         label_10->setText(QApplication::translate("PairingTool", "\346\263\242\347\211\271\347\216\207", nullptr));
         label_11->setText(QApplication::translate("PairingTool", "\344\270\262\345\217\243\345\217\267", nullptr));
         label_7->setText(QApplication::translate("PairingTool", "\346\240\241\351\252\214\344\275\215", nullptr));
-        btn_registerDevice->setText(QApplication::translate("PairingTool", "\350\256\276\345\244\207\346\263\250\345\206\214", nullptr));
         btn_paringCode->setText(QApplication::translate("PairingTool", "\345\210\206\351\205\215\351\205\215\345\257\271\347\240\201", nullptr));
         group_dongleData->setTitle(QApplication::translate("PairingTool", "Dongle \346\225\260\346\215\256\347\252\227\345\217\243", nullptr));
         group_mouseData->setTitle(QApplication::translate("PairingTool", "Mouse \346\225\260\346\215\256\347\252\227\345\217\243", nullptr));
